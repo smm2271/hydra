@@ -12,6 +12,38 @@ html, body {
   line-height: 1.4;
 }
 
+.audio-toolbar-button {
+  pointer-events: auto;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  padding: 0 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#audio-input {
+  position: fixed;
+  top: 48px;
+  right: 15px;
+  z-index: 90;
+  width: min(340px, calc(100vw - 60px));
+  padding: 15px;
+  border: 1px solid #aaa;
+  background: rgba(0, 0, 0, 0.92);
+  font: 14px/1.4 monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#audio-input[hidden] { display: none; }
+#audio-input audio { width: 100%; }
+#audio-input input[type="file"] { display: block; width: 100%; margin-top: 5px; }
+#audio-input button { padding: 6px; cursor: pointer; }
+#audio-input small { color: #bbb; }
+.audio-filename { overflow-wrap: anywhere; }
+
 .camera-inputs{
   color: black;
   background: white;

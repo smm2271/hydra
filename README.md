@@ -254,6 +254,14 @@ VITE_SERVER_URL=http://localhost:8000
 (replace http://localhost:8000 with the url of your server)
 
 ## Audio Responsiveness 
+Click the music-note button in the toolbar to import a local audio file as the
+audio analysis source. The player supports playback, pause, seeking, volume, and
+looping (enabled by default). Imported audio drives the existing `a.fft` and beat
+detection, so audio-reactive sketches work without changes, even if microphone
+permission is denied. Choose **Use microphone** to return to the microphone
+(microphone permission must be enabled). Files remain on your device and must be
+selected again after reloading; they are not included in shared sketch URLs.
+
 FFT functionality is available via an audio object accessed via "a". The editor uses https://github.com/meyda/meyda for audio analysis.
 To show the fft bins,
 ```

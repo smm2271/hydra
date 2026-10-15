@@ -2,6 +2,18 @@ export default {
     en: {
         translation: {
             'language-name': 'english',
+            audio: {
+                title: 'Audio source',
+                import: 'Import audio file',
+                microphone: 'Microphone',
+                loop: 'Loop',
+                'use-microphone': 'Use microphone',
+                hint: 'Use a.fft[0] in your sketch to react to this audio. Files stay on your device.',
+                'invalid-file': 'Please choose an audio file.',
+                'load-error': 'Unable to play this audio file. Try another file or format.',
+                'play-required': 'Press play to start the audio.',
+                'mic-error': 'Microphone is unavailable. Allow microphone access and reload to enable it.'
+            },
             toolbar: {
                 run: "Run all code (ctrl+shift+enter)",
                 upload: "upload to gallery",
