@@ -9,6 +9,7 @@ import editorStore from './src/stores/editor-store.js'
 import galleryStore from './src/stores/gallery-store.js'
 
 import mainView from './src/views/main.js'
+import registerRoutes from './src/lib/routes.js'
 
 const app = choo()
 // app.use(devtools())
@@ -20,11 +21,7 @@ app.use(galleryStore)
 
 app.use(languageStore)
 app.use(extensionStore)
-const basePath = import.meta.env.BASE_URL.startsWith('/')
-  ? import.meta.env.BASE_URL.replace(/\/$/, '')
-  : ''
-app.route(`${basePath}/`, mainView)
-app.route(`${basePath}/dev`, mainView)
+registerRoutes(app, import.meta.env.BASE_URL, mainView)
 app.mount('body')
 
 
