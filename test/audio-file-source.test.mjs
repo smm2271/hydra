@@ -17,7 +17,15 @@ function setup(t) {
       constructor() { contexts.push(this); this.destination = {} }
       createMediaElementSource(player) {
         this.player = player
-        return { connect: (destination) => { this.connected = destination } }
+        this.connections = new Set()
+        return {
+          connect: (destination) => { this.connected = destination; this.connections.add(destination) },
+          disconnect: (destination) => this.connections.delete(destination)
+        }
+      }
+      createMediaStreamDestination() {
+        const track = { stop() { this.stopped = true } }
+        return { stream: { getTracks: () => [track], getAudioTracks: () => [track] } }
       }
       async resume() { this.resumed = true }
       async close() { this.closed = true }
@@ -82,4 +90,19 @@ test('analysis failures preserve microphone state and disposal restores the orig
   source.dispose()
   assert.equal(audio.tick, source.originalTick)
   assert.equal(contexts[0].closed, true)
+})
+
+test('recording taps imported audio and releases its track without disconnecting speakers', async (t) => {
+  const { source, contexts, player } = setup(t)
+  assert.equal(source.captureAudio(), undefined)
+  await source.load({ name: 'music.wav' })
+  const capture = source.captureAudio()
+  const track = capture.stream.getAudioTracks()[0]
+  assert.equal(contexts[0].connections.size, 2)
+  capture.release()
+  assert.equal(track.stopped, true)
+  assert.deepEqual([...contexts[0].connections], [contexts[0].destination])
+  assert.equal(player.src, 'blob:1')
+  source.useMicrophone()
+  assert.equal(source.captureAudio(), undefined)
 })

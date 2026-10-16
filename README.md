@@ -27,12 +27,20 @@ Go to https://hydra.ojack.xyz
 * CTRL-Enter: run a line of code
 * CTRL-Shift-Enter: run all code on screen
 * ALT-Enter: run a block
-* CTRL-Shift-H: hide or show code
-* CTRL-Shift-F: format code using [Prettier](https://prettier.io/)
+* CTRL/CMD-Shift-H: hide or show code (also available through the eye button in the toolbar)
+* CTRL-Space: show code suggestions (also shown automatically while typing)
+* CTRL-Shift-F / CMD-Shift-F / ALT-Shift-F: format code using js-beautify
 * CTRL-Shift-S: Save screenshot and download as local file
 * CTRL-Shift-G: Share to twitter (if available). Shares to [@hydra_patterns](https://twitter.com/hydra_patterns)
 
 All code can be run either from the in-browser text editor or from the browser console.
+
+The toolbar also has code suggestions (`</>`) and format buttons. Suggestions
+include Hydra source functions, chained transforms with their parameters and
+defaults, JavaScript names, and functions registered with `setFunction()`.
+Use the arrow keys to choose a suggestion, Enter or Tab to insert it, and Esc
+to dismiss the list. Formatting uses two-space indentation and can be undone
+with Ctrl/Cmd+Z.
 
 Check [@hydra_patterns](https://twitter.com/hydra_patterns) for patterns folks have shared as an easy way to get started.
 
@@ -243,8 +251,27 @@ npm install
 ```
 run dev environment
 ```
-npm dev
+npm run dev
 ```
+
+## GitHub Pages deployment
+
+The [CI and GitHub Pages workflow](.github/workflows/pages.yml) runs `npm ci`,
+`npm test`, and `npm run build` on pull requests and pushes to `main`. After
+a successful build on `main`, it deploys the generated `dist` artifact to
+GitHub Pages. It can also be run manually from the Actions tab on `main`.
+
+In repository **Settings > Pages**, select **GitHub Actions** as the build
+source. The deployed site is https://smm2271.github.io/hydra/.
+The workflow sets `VITE_BASE_PATH` to the repository subpath for assets and routing.
+Local builds default to relative asset URLs. For a custom domain, set the workflow's
+`VITE_BASE_PATH` to `/` instead.
+Deployment builds from source; committing generated `dist` files is not required.
+
+To connect a backend, set the repository Actions variable `VITE_SERVER_URL`
+to its public HTTPS URL before deploying. This value is included in the
+browser bundle. Pages hosts the frontend; signaling and gallery features
+still require a separately hosted Hydra server.
 
 ## Connecting to server from dev/ local editor environment
 This repo only contains hydra editor frontend. You can connect to a backend server (https://github.com/hydra-synth/hydra-server) for signaling and gallery functionality. To do this, set up hydra-server from above. Then create a `.env` file in the root of the `hydra` directory. Add the url of your server as a line in the .env file as:
@@ -253,7 +280,22 @@ VITE_SERVER_URL=http://localhost:8000
 ```
 (replace http://localhost:8000 with the url of your server)
 
-## Audio Responsiveness 
+## Video recording
+
+Click the video-camera button in the toolbar, then **Start recording**. Stop
+recording and choose **Download video** to save the result. Choose **MP4** or
+**WebM** under **Video format**; MP4 is selected by default when supported.
+Unavailable formats are disabled, and **Automatic** lets the browser choose.
+Recording captures the Hydra canvas at 30 fps
+without code or UI. Choose **Microphone** (the default), **Imported audio file**,
+or **No audio** under **Recording audio** before starting. Allow microphone
+access when prompted; if access is denied, recording will not start and you can
+retry or choose another source. Stopping a recording leaves Hydra's microphone
+analysis running. For imported audio, load and play a file before recording.
+Keep the tab visible while recording. Videos stay on your
+device. Download a video before reloading or closing the page.
+
+## Audio Responsiveness
 Click the music-note button in the toolbar to import a local audio file as the
 audio analysis source. The player supports playback, pause, seeking, volume, and
 looping (enabled by default). Imported audio drives the existing `a.fft` and beat

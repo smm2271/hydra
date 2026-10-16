@@ -10,7 +10,8 @@ import 'codemirror-minified/addon/comment/comment'
 import EventEmitter from 'nanobus'
 import keymaps from './keymaps.js'
 import Mutator from './randomizer/Mutator.js'
-import beautify from 'js-beautify'
+import { createHintProvider } from './completions.js'
+import formatCode from './format-code.js'
 
 var isShowing = true
 
@@ -47,8 +48,10 @@ export default class Editor extends EventEmitter {
         this.cm.toggleComment()
       // } else if (e == 'gallery:saveToURL') {
         this.emit(e, this)
-      } else if (e === 'editor:formatCode') {
+      } else if (e === 'editor: format code') {
         this.formatCode()
+      } else if (e === 'editor: autocomplete') {
+        this.autocomplete()
       } else if (e == 'gallery:saveToURL') {
         this.emit('editor: save to URL', this.cm.getValue())
       } else {
@@ -66,6 +69,18 @@ export default class Editor extends EventEmitter {
     }
 
     this.cm = CodeMirror.fromTextArea(parent, opts)
+    this.hint = createHintProvider(CodeMirror, () => {
+      const definitions = window.hydraSynth?.generator?.glslTransforms
+      return definitions ? Object.values(definitions) : undefined
+    })
+    this.cm.on('inputRead', (cm, change) => {
+      if (change.origin !== '+input' || cm.somethingSelected() || cm.state.completionActive) return
+      const typed = change.text.join('\n')
+      if (!/[\w$.]$/.test(typed)) return
+      const cursor = cm.getCursor()
+      const before = cm.getLine(cursor.line).slice(0, cursor.ch)
+      if (/(?:[\w$]{2,}|\.[\w$]*)$/.test(before)) this.autocomplete()
+    })
     window.cm = this.cm
     this.cm.refresh()
 
@@ -92,8 +107,11 @@ export default class Editor extends EventEmitter {
   }
 
   formatCode() {
-    const formatted = beautify(this.cm.getValue(), { indent_size: 2, "break_chained_methods": true, "indent_with_tabs": true})
-    this.cm.setValue(formatted)
+    formatCode(this.cm)
+  }
+
+  autocomplete() {
+    this.cm.showHint({ hint: this.hint, completeSingle: false })
   }
 
   addCodeToTop(code = '') {

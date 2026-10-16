@@ -13,6 +13,7 @@ export default function audioStore(state, emitter) {
 
   emitter.on('hydra loaded', () => {
     source = new AudioFileSource(state.hydra.hydra.synth.a, player)
+    state.audio.source = source
     state.audio.ready = true
     render()
   })

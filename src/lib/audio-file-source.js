@@ -49,6 +49,19 @@ export default class AudioFileSource {
     this.audio.fft.fill(0)
   }
 
+  captureAudio() {
+    if (!this.url || !this.node) return undefined
+    const destination = this.context.createMediaStreamDestination()
+    this.node.connect(destination)
+    return {
+      stream: destination.stream,
+      release: () => {
+        this.node.disconnect(destination)
+        destination.stream.getTracks().forEach((track) => track.stop())
+      }
+    }
+  }
+
   dispose() {
     this.useMicrophone()
     this.audio.tick = this.originalTick

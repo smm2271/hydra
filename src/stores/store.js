@@ -4,13 +4,14 @@ import repl from './repl-v2.js'
 export default function store(state, emitter) {
   state.showInfo = false
   state.showUI = true
+  state.showCode = true
   state.showExtensions = false
   state.errorMessage = ''
   state.isError = false
 
   // if backend gallery endpoint supplied, then enable gallery functionality
   const SERVER_URL = import.meta.env.VITE_SERVER_URL
-  state.serverURL = SERVER_URL !== undefined ? SERVER_URL : null
+  state.serverURL = SERVER_URL || null
 
   window._reportError = (err) => {
     state.errorMessage = err.message
@@ -67,6 +68,20 @@ export default function store(state, emitter) {
   emitter.on('ui: hide all', function () {
     state.showUI = !state.showUI
     emitter.emit('render')
+  })
+
+  emitter.on('ui: toggle code', () => {
+    state.showCode = !state.showCode
+    emitter.emit('render')
+  })
+
+  // Keep the shortcut available when the editor is hidden or unfocused.
+  window.addEventListener('keydown', (event) => {
+    if (!event.defaultPrevented && (event.ctrlKey || event.metaKey) &&
+        event.shiftKey && !event.altKey && event.code === 'KeyH') {
+      event.preventDefault()
+      emitter.emit('ui: toggle code')
+    }
   })
 
   emitter.on('ui: toggle info', function (count) {

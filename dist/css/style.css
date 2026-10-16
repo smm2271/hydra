@@ -12,7 +12,7 @@ html, body {
   line-height: 1.4;
 }
 
-.audio-toolbar-button {
+.audio-toolbar-button, .editor-toolbar-button {
   pointer-events: auto;
   background: transparent;
   color: inherit;
@@ -21,6 +21,18 @@ html, body {
   font-size: 20px;
   cursor: pointer;
 }
+
+.editor-toolbar-button.hidden { display: none; }
+.editor-toolbar-button:hover, .audio-toolbar-button:hover { color: #ccc; }
+
+.CodeMirror-hints {
+  z-index: 100;
+  max-width: calc(100vw - 20px);
+  background: #222;
+  border-color: #666;
+}
+.CodeMirror-hint { color: #ddd; }
+li.CodeMirror-hint-active { background: #555; color: #fff; }
 
 #audio-input {
   position: fixed;
@@ -43,6 +55,28 @@ html, body {
 #audio-input button { padding: 6px; cursor: pointer; }
 #audio-input small { color: #bbb; }
 .audio-filename { overflow-wrap: anywhere; }
+
+#recording-panel {
+  position: fixed;
+  right: 15px;
+  bottom: 40px;
+  z-index: 90;
+  width: min(340px, calc(100vw - 60px));
+  padding: 15px;
+  border: 1px solid #aaa;
+  background: rgba(0, 0, 0, 0.92);
+  font: 14px/1.4 monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#recording-panel[hidden] { display: none; }
+#recording-panel small { color: #bbb; }
+#recording-panel button { padding: 6px; cursor: pointer; }
+#recording-panel select { display: block; width: 100%; margin-top: 5px; padding: 6px; }
+#recording-panel a { color: #fff; }
+.is-recording { color: #ff5252; }
+.recording-badge { margin-left: 5px; font: bold 11px monospace; }
 
 .camera-inputs{
   color: black;

@@ -27,17 +27,27 @@ export default class Editor extends Component {
 
   hide() {
     this.innerText.style.opacity = 0
+    this.innerText.style.pointerEvents = 'none'
+    this.innerText.style.visibility = 'hidden'
     this.logElement.style.opacity = 0
+    this.logElement.style.visibility = 'hidden'
+    this.editor.cm.closeHint()
+    this.innerText.setAttribute('aria-hidden', 'true')
+    this.logElement.setAttribute('aria-hidden', 'true')
   }
 
   show() {
     this.innerText.style.opacity = 1
+    this.innerText.style.visibility = 'visible'
     this.innerText.style.pointerEvents = 'all'
     this.logElement.style.opacity = 1
+    this.logElement.style.visibility = 'visible'
+    this.innerText.removeAttribute('aria-hidden')
+    this.logElement.removeAttribute('aria-hidden')
   }
 
   update (state) {
-    if(state.showInfo === true && state.showExtensions === false || state.showUI === false) {
+    if(state.showInfo === true && state.showExtensions === false || state.showUI === false || state.showCode === false) {
         this.hide()
     } else {
         this.show()

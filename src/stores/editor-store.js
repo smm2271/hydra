@@ -24,6 +24,12 @@ export default function editorStore(state, emitter) {
 
     emitter.on('editor: format code', () => {
         state.editor.editor.formatCode()
+        state.editor.editor.cm.focus()
+    })
+
+    emitter.on('editor: autocomplete', () => {
+        state.editor.editor.cm.focus()
+        state.editor.editor.autocomplete()
     })
 
     emitter.on('editor: load code', (code) => {

@@ -3,6 +3,7 @@ import info from './info.js'
 import Hydra from './Hydra.js'
 import Editor from './EditorComponent.js'
 import audioInput from './audio-input.js'
+import recordingPanel from './recording.js'
 // import Editor from './EditorCm6.js'
 
 
@@ -17,6 +18,7 @@ export default function mainView(state, emit) {
   ${info(state, emit)}
   ${state.cache(Editor, 'editor').render(state, emit)}
   ${audioInput(state, emit)}
+  ${recordingPanel(state, emit)}
   </body>
  `
 }
